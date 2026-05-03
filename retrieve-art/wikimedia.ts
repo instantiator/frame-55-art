@@ -1,4 +1,26 @@
 import { ArtistMatch, ArtPiece } from './types';
+import { fetchWithRetry } from './io';
+
+/**
+ * Helper function to fetch and safely parse JSON.
+ * If parsing fails, it throws an error containing the raw response body.
+ */
+async function fetchAndParseJson(url: string, options?: RequestInit): Promise<any> {
+  const response = await fetchWithRetry(url, options);
+  const text = await response.text();
+
+  
+  if (!response.ok) {
+    const errorMsg = `HTTP Error ${response.status}: ${response.statusText}\nRaw response:\n${text.substring(0, 2000)}`;
+    throw new Error(errorMsg);
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    throw new Error(`Failed to parse JSON. Raw response:\n${text.substring(0, 2000)}`, { cause: err });
+  }
+}
 
 /**
  * Searches Wikidata for an artist by name.
@@ -8,8 +30,9 @@ import { ArtistMatch, ArtPiece } from './types';
  */
 export async function searchArtists(name: string, fullMatch: boolean): Promise<ArtistMatch[]> {
   const url = `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${encodeURIComponent(name)}&language=en&format=json&type=item`;
-  const response = await fetch(url);
-  const data = await response.json() as any;
+  const data = await fetchAndParseJson(url, {
+    headers: { 'User-Agent': 'Frame55ArtRetriever/1.0 (https://github.com/lewiswestbury/frame-55-art)' }
+  });
 
   let results = data.search.map((item: any) => ({
     id: item.id,
@@ -32,8 +55,9 @@ export async function searchArtists(name: string, fullMatch: boolean): Promise<A
 export async function getArtistArt(artistId: string): Promise<{ artistName: string; pieces: ArtPiece[] }> {
   // Query to get artist name
   const artistUrl = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${artistId}&props=labels&languages=en&format=json`;
-  const artistResponse = await fetch(artistUrl);
-  const artistData = await artistResponse.json() as any;
+  const artistData = await fetchAndParseJson(artistUrl, {
+    headers: { 'User-Agent': 'Frame55ArtRetriever/1.0 (https://github.com/lewiswestbury/frame-55-art)' }
+  });
   const artistName = artistData.entities[artistId]?.labels?.en?.value || artistId;
 
   // SPARQL query to find works by artist (P170) with images (P18)
@@ -46,15 +70,10 @@ export async function getArtistArt(artistId: string): Promise<{ artistName: stri
   `;
   const sparqlUrl = `https://query.wikidata.org/sparql?query=${encodeURIComponent(sparqlQuery)}&format=json`;
   
-  const response = await fetch(sparqlUrl, {
+  const data = await fetchAndParseJson(sparqlUrl, {
     headers: { 'User-Agent': 'Frame55ArtRetriever/1.0 (https://github.com/lewiswestbury/frame-55-art)' }
   });
-  
-  if (!response.ok) {
-    throw new Error(`SPARQL query failed: ${response.statusText}`);
-  }
 
-  const data = await response.json() as any;
   const pieces = data.results.bindings.map((binding: any) => ({
     name: binding.workLabel.value,
     url: binding.image.value,
