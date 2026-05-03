@@ -4,6 +4,8 @@ A collection of scripts and utilities for retrieving, resizing, and managing hig
 
 I created this tool to work with the Frame 55, but if you know the dimensions of your display you can reconfigure the app to resize the art for it.
 
+It will locate, download and resize art to fit onto the display. It uses the equivalent of css `object-fit: cover` to scale and crop the art.
+
 > [!NOTE]
 > Contributions welcome! Please submit your display dimensions as a pull request modification to `dimensions.json`
 
