@@ -2,6 +2,17 @@
 
 A collection of scripts and utilities for retrieving, resizing, and managing high-resolution artwork, primarily intended for display on digital canvases like the Samsung The Frame TV (55").
 
+I created this tool to work with the Frame 55, but if you know the dimensions of your display you can reconfigure the app to resize the art for it.
+
+> [!NOTE]
+> Contributions welcome! Please submit your display dimensions as a pull request modification to `dimensions.json`
+
+> [!WARNING]
+> The scripts in this repository expect `bash` and `npm` to be present on your system, and I've written them to run on Mac OS. Your mileage may vary on other operating systems! Again, all contributions are welcome.
+
+> [!CAUTION]
+> Please don't use these tools to swamp Wikimedia with requests.
+
 ## Project Structure
 
 This repository contains several tools to automate the process of finding and preparing art:
