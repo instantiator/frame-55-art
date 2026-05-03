@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { downloadFile, sleep } from './io';
 import { formatOutput } from './format';
-import { searchArtists, getArtistArt } from './wikimedia';
+import { searchArtists, getArtistArt, getFileLicense } from './wikimedia';
 
 /**
  * Command-line arguments parsed for the application.
@@ -123,11 +123,27 @@ async function main() {
       for (let i = 0; i < pieces.length; i++) {
         const piece = pieces[i];
         const rawFileName = path.basename(new URL(piece.url).pathname);
-        let fileName = decodeURIComponent(rawFileName);
+        const decodedFileName = decodeURIComponent(rawFileName);
         // Replace illegal filesystem characters with an underscore
-        fileName = fileName.replace(/[/?<>\\:*|"]/g, '_');
+        const fileName = decodedFileName.replace(/[/?<>\\:*|"]/g, '_');
         const localPath = path.join(targetDir, fileName);
         
+        // Retrieve license information using the true Commons title
+        const licenseInfo = await getFileLicense(decodedFileName);
+        
+        if (fs.existsSync(localPath)) {
+          console.log(`[${i + 1}/${pieces.length}] Skipping (already exists): ${piece.name}`);
+          summary.push({
+            artistName,
+            pieceName: piece.name,
+            path: localPath,
+            sourceUrl: piece.url,
+            license: licenseInfo.name,
+            licenseUrl: licenseInfo.url
+          });
+          continue;
+        }
+
         console.log(`[${i + 1}/${pieces.length}] Downloading: ${piece.name} ...`);
         try {
           await downloadFile(piece.url, localPath);
@@ -135,7 +151,9 @@ async function main() {
             artistName,
             pieceName: piece.name,
             path: localPath,
-            sourceUrl: piece.url
+            sourceUrl: piece.url,
+            license: licenseInfo.name,
+            licenseUrl: licenseInfo.url
           });
           // Be respectful to Wikimedia servers
           await sleep(500); 

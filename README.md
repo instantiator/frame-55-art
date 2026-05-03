@@ -13,6 +13,14 @@ I created this tool to work with the Frame 55, but if you know the dimensions of
 > [!CAUTION]
 > Please don't use these tools to swamp Wikimedia with requests.
 
+> [!TIP]
+> All art retrieved with these tools comes with an `art.csv` and `art.json` file with information about the licensing of the art (ie. how you may use it). Wikimedia Commons only accepts "free" licenses. This means every image allows:
+>
+> * Commercial use: You can use the image to make money (e.g., in a book or on a monetized blog).  
+> * Modification: You can crop, edit, or remix the image.
+>
+> However, you may be required to provide attribution information, or there may be some other constraints, if using this art for other projects. Check the license if you're doing anything more than just displaying some art on your home TV.
+
 ## Project Structure
 
 This repository contains several tools to automate the process of finding and preparing art:

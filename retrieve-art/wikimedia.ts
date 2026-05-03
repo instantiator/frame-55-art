@@ -81,3 +81,37 @@ export async function getArtistArt(artistId: string): Promise<{ artistName: stri
 
   return { artistName, pieces };
 }
+
+/**
+ * Retrieves the license information for a specific file from Wikimedia Commons.
+ * 
+ * @param fileName The raw filename on Wikimedia Commons (e.g., 'Johannes_Vermeer_-_Diana_and_her_Nymphs.jpg')
+ */
+export async function getFileLicense(fileName: string): Promise<{ name: string; url: string }> {
+  const apiUrl = `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=extmetadata&titles=File:${encodeURIComponent(fileName)}&format=json`;
+  
+  const data = await fetchAndParseJson(apiUrl, {
+    headers: { 'User-Agent': 'Frame55ArtRetriever/1.0 (https://github.com/lewiswestbury/frame-55-art)' }
+  });
+
+  try {
+    const pages = data.query.pages;
+    const pageId = Object.keys(pages)[0];
+    if (pageId === '-1') return { name: 'Unknown', url: '' };
+    
+    const extmetadata = pages[pageId].imageinfo[0].extmetadata;
+    const name = extmetadata.LicenseShortName?.value || extmetadata.License?.value || 'Unknown';
+    
+    // Wikimedia provides a LicenseUrl for Creative Commons licenses
+    let url = extmetadata.LicenseUrl?.value || '';
+    
+    // If there is no specific URL but it is public domain, provide the CC Public Domain Mark as a fallback reference
+    if (!url && name.toLowerCase().includes('public domain')) {
+      url = 'https://creativecommons.org/publicdomain/mark/1.0/';
+    }
+    
+    return { name, url };
+  } catch {
+    return { name: 'Unknown', url: '' };
+  }
+}

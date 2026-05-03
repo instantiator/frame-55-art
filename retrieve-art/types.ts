@@ -20,4 +20,8 @@ export interface ArtPiece {
   url: string;
   /** The local filesystem path where the image is saved (if downloaded) */
   localPath?: string;
+  /** The license of the artwork (e.g., "Public domain") */
+  license?: string;
+  /** A URL linking to the license details or public domain deed */
+  licenseUrl?: string;
 }
