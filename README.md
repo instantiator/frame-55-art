@@ -66,7 +66,7 @@ Found 1151 pieces for artist: Vincent van Gogh
 
 It'll print a summary of all art downloaded when finished.
 
-> [!HINT]
+> [!TIP]
 > You can limit the number of items downloaded (eg. when testing this script) by passing in a limit value, eg. `-l 3`.
 
 Take a look inside the `art/source/` directory to locate the downloaded art.
