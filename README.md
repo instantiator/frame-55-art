@@ -7,9 +7,6 @@ I created this tool to work with the Frame 55, but if you know the dimensions of
 > [!NOTE]
 > Contributions welcome! Please submit your display dimensions as a pull request modification to `dimensions.json`
 
-> [!WARNING]
-> The scripts in this repository expect `bash` and `npm` to be present on your system, and I've written them to run on Mac OS. Your mileage may vary on other operating systems! Again, all contributions are welcome.
-
 > [!CAUTION]
 > Please don't use these tools to swamp Wikimedia with requests.
 
@@ -20,6 +17,21 @@ I created this tool to work with the Frame 55, but if you know the dimensions of
 > * Modification: You can crop, edit, or remix the image.
 >
 > However, you may be required to provide attribution information, or there may be some other constraints, if using this art for other projects. Check the license if you're doing anything more than just displaying some art on your home TV.
+
+## Prerequisites
+
+> [!WARNING]
+> I've written the scripts in this repository to run on Mac OS. Your mileage may vary on other operating systems! These scripts make use of: `bash`, `brew`, `nodejs`, `npm`, `imagemagick`, `jq`. If `imagemagick` or `jq` aren't installed, they'll use Homebrew to install them.  Again, all contributions are welcome.
+
+* Install Homebrew: [brew.sh](https://brew.sh/)
+* Install Node:
+  ```
+  brew install node
+  ```
+* Install `imagemagick`, `jq`:
+  ```
+  brew install imagemagick jq
+  ```
 
 ## Project Structure
 
@@ -77,7 +89,10 @@ It'll print a summary of all art downloaded when finished.
 > [!TIP]
 > You can limit the number of items downloaded (eg. when testing this script) by passing in a limit value, eg. `-l 3`.
 
-Take a look inside the `art/source/` directory to locate the downloaded art.
+Take a look inside the `art/source/` directory to locate the downloaded art. 
+
+> [!NOTE]
+> You'll find `art.json` and `art.csv` in the download directory. These files describe the art that has been donwloaded, and include information about the licensing details (if any).
 
 Once you have some art, resize it to fit your display with the `resize-art.sh` script, eg.
 
