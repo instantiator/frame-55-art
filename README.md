@@ -79,7 +79,7 @@ $ ./resize-art.sh -s "art/source/Q5582 Vincent van Gogh"
 
 The resized art will appear in the `art/output/Samsung Frame 55"` directory. 
 
-> [!HINT]
+> [!TIP]
 > By default, this script uses the Samsung Frame 55 device specifications. You can specify another by modifying `data/dimensions.json` and then providing the device path with the device parameter, eg.
 >
 > ```
