@@ -72,7 +72,7 @@ $ ./retrieve-art.sh -n "Van Gogh"
 └─────────┴──────────────┴──────────────────────────┴─────────────────────────────────────────┘
 ```
 
-Here, it's `Q5582`. Then pass the id to retrieve their art, held by Wikimedia.
+Here, it's `Q5582`. Then pass the id into `retrieve-art.sh` to retrieve their art, held by Wikimedia.
 
 ```sh
 $ ./retrieve-art.sh -i "Q5582"
