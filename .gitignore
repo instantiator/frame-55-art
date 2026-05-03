@@ -8,7 +8,6 @@ Thumbs.db
 
 # IDEs and editors
 .vscode/*
-!.vscode/settings.json
 .idea/
 *.swp
 *.swo
